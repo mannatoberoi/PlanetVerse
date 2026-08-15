@@ -1,0 +1,65 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.35rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-family: var(--pv-font-display);
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition:
+    transform var(--pv-transition),
+    background var(--pv-transition),
+    border-color var(--pv-transition),
+    box-shadow var(--pv-transition),
+    color var(--pv-transition);
+}
+
+.button:hover {
+  transform: translateY(-1px);
+}
+
+.button:active {
+  transform: translateY(0);
+}
+
+.button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.primary {
+  color: #041018;
+  background: linear-gradient(135deg, var(--pv-cyan), var(--pv-teal));
+  box-shadow: var(--pv-glow-cyan);
+}
+
+.primary:hover {
+  box-shadow: 0 0 28px rgba(90, 210, 255, 0.5);
+}
+
+.secondary {
+  color: var(--pv-text);
+  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--pv-border);
+}
+
+.secondary:hover {
+  border-color: var(--pv-border-glow);
+  background: rgba(90, 210, 255, 0.08);
+}
+
+.ghost {
+  color: var(--pv-text-muted);
+  background: transparent;
+  border-color: transparent;
+}
+
+.ghost:hover {
+  color: var(--pv-text);
+}

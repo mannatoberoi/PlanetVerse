@@ -1,0 +1,199 @@
+.wrap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  animation: orbit var(--orbit-speed) linear infinite;
+  transform: rotate(var(--start-angle));
+  transform-origin: center;
+}
+
+.orbit {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: calc(var(--orbit-radius) * 2);
+  height: calc(var(--orbit-radius) * 2);
+  margin-left: calc(var(--orbit-radius) * -1);
+  margin-top: calc(var(--orbit-radius) * -1);
+  border: 1px solid rgba(140, 190, 255, 0.12);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.planet {
+  position: absolute;
+  top: 0;
+  left: var(--orbit-radius);
+  transform: translate(-50%, -50%) rotate(calc(var(--start-angle) * -1));
+  border: none;
+  padding: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  background: transparent;
+  animation: counter-spin var(--orbit-speed) linear infinite;
+  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.planet:focus-visible {
+  outline: 2px solid var(--pv-cyan);
+  outline-offset: 6px;
+}
+
+.hovered {
+  z-index: 5;
+}
+
+.visual {
+  position: absolute;
+  inset: 0;
+  display: block;
+  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hovered .visual {
+  transform: scale(1.12);
+}
+
+.surface {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.55), transparent 22%),
+    radial-gradient(circle at 45% 40%, var(--planet-color), var(--planet-accent) 70%);
+  box-shadow:
+    inset -10px -14px 24px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.ring {
+  position: absolute;
+  inset: -18% -28%;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.28);
+  transform: rotateX(68deg) rotateZ(-18deg);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.glow {
+  position: absolute;
+  inset: -25%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(90, 210, 255, 0.35), transparent 70%);
+  opacity: 0.35;
+  transition: opacity 280ms ease;
+  pointer-events: none;
+}
+
+.hovered .glow {
+  opacity: 0.9;
+  background: radial-gradient(circle, var(--planet-color), transparent 70%);
+}
+
+.label {
+  position: absolute;
+  left: 50%;
+  bottom: -1.6rem;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-family: var(--pv-font-display);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  color: var(--pv-text-muted);
+  opacity: 0.85;
+}
+
+.tooltip {
+  position: absolute;
+  top: calc(var(--orbit-radius) * -0.15);
+  left: calc(var(--orbit-radius) + 28px);
+  width: min(240px, 55vw);
+  padding: 0.85rem 0.95rem;
+  text-align: left;
+  z-index: 6;
+  pointer-events: none;
+  animation: fade-in 180ms ease;
+}
+
+.tooltipTitle {
+  margin: 0 0 0.2rem;
+  color: var(--pv-text);
+  font-family: var(--pv-font-display);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+}
+
+.tooltipMeta {
+  margin: 0 0 0.45rem;
+  color: var(--pv-cyan);
+  font-size: 0.75rem;
+}
+
+.tooltipDesc {
+  margin: 0 0 0.55rem;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--pv-text-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tooltipHint {
+  margin: 0;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--pv-gold);
+}
+
+@keyframes orbit {
+  from {
+    transform: rotate(var(--start-angle));
+  }
+  to {
+    transform: rotate(calc(var(--start-angle) + 360deg));
+  }
+}
+
+@keyframes counter-spin {
+  from {
+    transform: translate(-50%, -50%) rotate(calc(var(--start-angle) * -1));
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(calc(var(--start-angle) * -1 - 360deg));
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .wrap {
+    --orbit-radius: calc(var(--orbit-radius) * 0.62) !important;
+  }
+
+  .planet {
+    width: calc(var(--size, 90px) * 0.85);
+  }
+
+  .tooltip {
+    left: 50%;
+    top: auto;
+    bottom: calc(100% + 18px);
+    transform: translateX(-50%);
+    width: min(220px, 70vw);
+  }
+}

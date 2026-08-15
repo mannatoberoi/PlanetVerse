@@ -1,0 +1,65 @@
+.page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+}
+
+.card {
+  width: min(420px, 100%);
+  padding: 1.6rem 1.5rem 1.4rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.35rem;
+  font-family: var(--pv-font-display);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pv-cyan);
+}
+
+.card h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.6rem;
+}
+
+.note {
+  margin: 0 0 1.25rem;
+  font-size: 0.88rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.4rem;
+  margin-bottom: 0.95rem;
+  font-size: 0.85rem;
+  color: var(--pv-text-muted);
+}
+
+.field input {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  border-radius: var(--pv-radius-sm);
+  border: 1px solid var(--pv-border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--pv-text);
+  outline: none;
+  transition: border-color var(--pv-transition), box-shadow var(--pv-transition);
+}
+
+.field input:focus {
+  border-color: var(--pv-border-glow);
+  box-shadow: 0 0 0 3px rgba(90, 210, 255, 0.12);
+}
+
+.submit {
+  width: 100%;
+  margin-top: 0.35rem;
+}
+
+.footer {
+  margin: 1rem 0 0;
+  text-align: center;
+  font-size: 0.85rem;
+}

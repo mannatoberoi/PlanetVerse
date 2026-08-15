@@ -1,0 +1,23 @@
+.page {
+  width: min(1100px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 1.5rem 0 3rem;
+}
+
+.header {
+  margin-bottom: 1.25rem;
+  text-align: center;
+}
+
+.eyebrow {
+  margin: 0 0 0.35rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pv-cyan);
+}
+
+.lead {
+  margin: 0.35rem auto 0;
+  max-width: 52ch;
+}

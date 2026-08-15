@@ -1,0 +1,43 @@
+.card {
+  padding: 0.95rem 1rem;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.4rem;
+}
+
+.header h3 {
+  margin: 0;
+  font-size: 0.92rem;
+}
+
+.badge {
+  flex-shrink: 0;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 1px solid var(--pv-border);
+}
+
+.done {
+  color: var(--pv-teal);
+  border-color: rgba(61, 255, 224, 0.35);
+  background: rgba(61, 255, 224, 0.08);
+}
+
+.pending {
+  color: var(--pv-gold);
+  border-color: rgba(240, 199, 94, 0.35);
+  background: rgba(240, 199, 94, 0.08);
+}
+
+.meta {
+  margin: 0;
+  font-size: 0.8rem;
+}

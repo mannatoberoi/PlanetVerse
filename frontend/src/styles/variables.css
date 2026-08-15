@@ -1,0 +1,30 @@
+:root {
+  /* Space palette — deep navy, cyan signal, soft gold accent */
+  --pv-void: #05070f;
+  --pv-space: #0a1020;
+  --pv-nebula: #121c36;
+  --pv-panel: rgba(14, 22, 42, 0.55);
+  --pv-panel-strong: rgba(10, 16, 32, 0.78);
+  --pv-border: rgba(140, 190, 255, 0.18);
+  --pv-border-glow: rgba(90, 210, 255, 0.45);
+
+  --pv-text: #e8f0ff;
+  --pv-text-muted: #9aadc8;
+  --pv-cyan: #5ad2ff;
+  --pv-teal: #3dffe0;
+  --pv-gold: #f0c75e;
+  --pv-rose: #ff7b9c;
+  --pv-violet: #8b7bff;
+
+  --pv-font-display: "Orbitron", "Segoe UI", sans-serif;
+  --pv-font-body: "Exo 2", "Segoe UI", sans-serif;
+
+  --pv-radius: 16px;
+  --pv-radius-sm: 10px;
+  --pv-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+  --pv-glow-cyan: 0 0 24px rgba(90, 210, 255, 0.35);
+  --pv-transition: 280ms cubic-bezier(0.22, 1, 0.36, 1);
+
+  --pv-nav-h: 72px;
+  --pv-max: 1120px;
+}

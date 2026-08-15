@@ -1,0 +1,88 @@
+.landing {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 2rem 1.25rem;
+  overflow: hidden;
+}
+
+.hero {
+  position: relative;
+  z-index: 2;
+  width: min(720px, 100%);
+  text-align: center;
+}
+
+.eyebrow {
+  margin: 0 0 0.85rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--pv-cyan);
+}
+
+.brand {
+  margin: 0;
+  font-size: clamp(2.6rem, 9vw, 5.2rem);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  background: linear-gradient(180deg, #ffffff 10%, #9fd8ff 70%, #5ad2ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 40px rgba(90, 210, 255, 0.15);
+}
+
+.tagline {
+  margin: 0.55rem 0 1.1rem;
+  font-size: clamp(1rem, 2.4vw, 1.25rem);
+  letter-spacing: 0.08em;
+  color: var(--pv-text);
+}
+
+.copy {
+  margin: 0 auto 1.75rem;
+  max-width: 48ch;
+  font-size: 1rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.planet {
+  position: absolute;
+  z-index: 1;
+  width: min(420px, 70vw);
+  height: min(420px, 70vw);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.35), transparent 18%),
+    radial-gradient(circle at 45% 42%, #4eb7ff, #163a5c 55%, #07101f 78%);
+  filter: blur(0.2px);
+  opacity: 0.45;
+  box-shadow:
+    0 0 80px rgba(90, 210, 255, 0.25),
+    inset -30px -40px 60px rgba(0, 0, 0, 0.45);
+  animation: float-planet 12s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes float-planet {
+  0%,
+  100% {
+    transform: translate(18%, -8%) scale(1);
+  }
+  50% {
+    transform: translate(20%, -4%) scale(1.04);
+  }
+}
+
+@media (max-width: 640px) {
+  .planet {
+    opacity: 0.28;
+  }
+}

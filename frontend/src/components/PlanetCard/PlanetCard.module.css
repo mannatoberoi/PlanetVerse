@@ -1,0 +1,90 @@
+.card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1rem;
+  padding: 1.1rem 1.15rem;
+  transition:
+    transform var(--pv-transition),
+    border-color var(--pv-transition),
+    box-shadow var(--pv-transition);
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  border-color: var(--pv-border-glow);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35), var(--pv-glow-cyan);
+}
+
+.orb {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.55), transparent 22%),
+    radial-gradient(circle at 45% 40%, var(--planet-color), var(--planet-accent) 70%);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--planet-color) 40%, transparent);
+  align-self: start;
+}
+
+.body {
+  min-width: 0;
+}
+
+.code {
+  margin: 0 0 0.2rem;
+  color: var(--pv-cyan);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0 0 0.45rem;
+  font-size: 1rem;
+}
+
+.desc {
+  margin: 0 0 0.85rem;
+  font-size: 0.88rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.progressBlock {
+  margin-bottom: 0.85rem;
+}
+
+.progressMeta {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.35rem;
+  font-size: 0.75rem;
+  color: var(--pv-text-muted);
+}
+
+.track {
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.bar {
+  height: 100%;
+  border-radius: inherit;
+}
+
+.link {
+  font-family: var(--pv-font-display);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 560px) {
+  .card {
+    grid-template-columns: 1fr;
+  }
+}

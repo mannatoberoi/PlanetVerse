@@ -1,0 +1,120 @@
+@import "./variables.css";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--pv-font-body);
+  color: var(--pv-text);
+  background: var(--pv-void);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--pv-font-display);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  margin: 0 0 0.5em;
+  line-height: 1.2;
+}
+
+p {
+  margin: 0 0 1em;
+  color: var(--pv-text-muted);
+}
+
+a {
+  color: var(--pv-cyan);
+  text-decoration: none;
+  transition: color var(--pv-transition);
+}
+
+a:hover {
+  color: var(--pv-teal);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.app-shell {
+  position: relative;
+  min-height: 100vh;
+}
+
+.page {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+}
+
+.page--with-nav {
+  padding-top: var(--pv-nav-h);
+}
+
+.glass-panel {
+  background: var(--pv-panel);
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: var(--pv-shadow);
+}
+
+.section-title {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+}
+
+.muted {
+  color: var(--pv-text-muted);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --pv-nav-h: 64px;
+  }
+}

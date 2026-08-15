@@ -1,0 +1,78 @@
+.screen {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 0.65rem;
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(30, 60, 120, 0.45), transparent 55%),
+    radial-gradient(ellipse at 70% 80%, rgba(20, 90, 90, 0.25), transparent 50%),
+    #04060d;
+  text-align: center;
+  padding: 1.5rem;
+}
+
+.glow {
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(90, 210, 255, 0.25), transparent 70%);
+  filter: blur(8px);
+  animation: pulse 2.4s ease-in-out infinite;
+}
+
+.brand {
+  position: relative;
+  margin: 0;
+  font-family: var(--pv-font-display);
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--pv-text);
+}
+
+.tagline {
+  position: relative;
+  margin: 0 0 1.4rem;
+  color: var(--pv-text-muted);
+  letter-spacing: 0.08em;
+}
+
+.track {
+  position: relative;
+  width: min(280px, 70vw);
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.bar {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--pv-cyan), var(--pv-teal));
+  box-shadow: 0 0 12px rgba(90, 210, 255, 0.7);
+}
+
+.label {
+  position: relative;
+  margin: 0.4rem 0 0;
+  font-size: 0.8rem;
+  color: var(--pv-text-muted);
+  letter-spacing: 0.06em;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(0.92);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+}

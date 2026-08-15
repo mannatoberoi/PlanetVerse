@@ -1,0 +1,91 @@
+.panel {
+  display: grid;
+  gap: 2rem;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1.25rem;
+  padding: 1.35rem 1.4rem;
+  align-items: start;
+}
+
+.planet {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.55), transparent 22%),
+    radial-gradient(circle at 45% 40%, var(--planet-color), var(--planet-accent) 70%);
+  box-shadow: 0 0 28px color-mix(in srgb, var(--planet-color) 40%, transparent);
+}
+
+.code {
+  margin: 0 0 0.35rem;
+  color: var(--pv-cyan);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+}
+
+.title {
+  margin: 0 0 0.55rem;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+}
+
+.desc {
+  margin: 0 0 1rem;
+  max-width: 58ch;
+}
+
+.progressMeta {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+  font-size: 0.78rem;
+  color: var(--pv-text-muted);
+}
+
+.track {
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.bar {
+  height: 100%;
+  border-radius: inherit;
+}
+
+.section {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.85rem;
+}
+
+.project {
+  padding: 1rem;
+}
+
+.project h3 {
+  margin: 0 0 0.4rem;
+  font-size: 0.95rem;
+}
+
+.project p {
+  margin: 0;
+  font-size: 0.88rem;
+}
+
+@media (max-width: 640px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+}

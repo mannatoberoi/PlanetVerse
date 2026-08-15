@@ -1,0 +1,28 @@
+.shoot {
+  position: absolute;
+  width: 110px;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, rgba(220, 240, 255, 0.95));
+  transform: rotate(-35deg);
+  opacity: 0;
+  pointer-events: none;
+  animation-name: streak;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+  box-shadow: 0 0 8px rgba(180, 220, 255, 0.7);
+}
+
+@keyframes streak {
+  0% {
+    opacity: 0;
+    transform: rotate(-35deg) translateX(0);
+  }
+  12% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(-35deg) translateX(280px);
+  }
+}
