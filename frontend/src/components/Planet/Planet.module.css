@@ -93,6 +93,25 @@
   background: radial-gradient(circle, var(--planet-color), transparent 70%);
 }
 
+.match .planet .glow {
+  opacity: 0.95;
+  background: radial-gradient(circle, var(--planet-color), transparent 70%);
+}
+
+.match .visual {
+  transform: scale(1.14);
+  filter: drop-shadow(0 0 16px var(--planet-color));
+}
+
+.dim {
+  opacity: 0.28;
+  filter: grayscale(0.35);
+}
+
+.dim .label {
+  opacity: 0.4;
+}
+
 .label {
   position: absolute;
   left: 50%;

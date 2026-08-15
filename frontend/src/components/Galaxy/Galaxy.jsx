@@ -6,11 +6,17 @@ import GalaxyScene from "./GalaxyScene";
 import { ROUTES } from "../../utils/constants";
 import styles from "./Galaxy.module.css";
 
-export default function Galaxy({ courses = [] }) {
+export default function Galaxy({
+  courses = [],
+  searchQuery = "",
+  highlightedId = null,
+}) {
   const stageRef = useRef(null);
   const flashRef = useRef(null);
   const navigate = useNavigate();
   const travelingRef = useRef(false);
+
+  const normalizedQuery = searchQuery.trim().toLowerCase();
 
   const handleSelect = (course, planetEl) => {
     if (travelingRef.current) return;
@@ -58,9 +64,30 @@ export default function Galaxy({ courses = [] }) {
           <span className={styles.corePulse} />
           <span className={styles.coreLabel}>Knowledge Core</span>
         </div>
-        {courses.map((course) => (
-          <Planet key={course.id} course={course} onSelect={handleSelect} />
-        ))}
+        {courses.map((course) => {
+          const matches =
+            !normalizedQuery ||
+            course.name.toLowerCase().includes(normalizedQuery) ||
+            course.code.toLowerCase().includes(normalizedQuery);
+
+          const isHighlighted =
+            highlightedId != null && String(highlightedId) === String(course.id);
+
+          let matchState = "neutral";
+          if (normalizedQuery) {
+            matchState = matches ? "match" : "dim";
+          }
+          if (isHighlighted) matchState = "match";
+
+          return (
+            <Planet
+              key={course.id}
+              course={course}
+              onSelect={handleSelect}
+              matchState={matchState}
+            />
+          );
+        })}
       </div>
       <div className={styles.travelFlash} ref={flashRef} aria-hidden="true" />
     </section>

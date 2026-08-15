@@ -32,3 +32,7 @@ Thumbs.db
 
 # Vite
 frontend/.vite/
+
+# Local verification MySQL data directory (never commit)
+.mysql-data/
+

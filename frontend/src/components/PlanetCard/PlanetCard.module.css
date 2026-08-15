@@ -44,7 +44,7 @@
 }
 
 .desc {
-  margin: 0 0 0.85rem;
+  margin: 0 0 0.55rem;
   font-size: 0.88rem;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -52,28 +52,12 @@
   overflow: hidden;
 }
 
-.progressBlock {
-  margin-bottom: 0.85rem;
-}
-
-.progressMeta {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.35rem;
+.type {
+  margin: 0 0 0.85rem;
   font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   color: var(--pv-text-muted);
-}
-
-.track {
-  height: 4px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  overflow: hidden;
-}
-
-.bar {
-  height: 100%;
-  border-radius: inherit;
 }
 
 .link {

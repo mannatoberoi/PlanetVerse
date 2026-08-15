@@ -6,12 +6,20 @@ export default function Planet({
   onSelect,
   style,
   showOrbit = true,
+  matchState = "neutral",
 }) {
   const [hovered, setHovered] = useState(false);
 
+  const matchClass =
+    matchState === "match"
+      ? styles.match
+      : matchState === "dim"
+        ? styles.dim
+        : "";
+
   return (
     <div
-      className={styles.wrap}
+      className={`${styles.wrap} ${matchClass}`}
       style={{
         ...style,
         "--orbit-radius": `${course.orbitRadius}px`,

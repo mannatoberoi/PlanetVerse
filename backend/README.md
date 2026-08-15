@@ -1,15 +1,30 @@
-# PlanetVerse Backend
+# PlanetVerse Backend — Express + MySQL
 
-This folder is reserved for the future **Express + MySQL** API.
+Real REST API for the PlanetVerse learning universe.
 
-## Planned stack
+## Structure
 
-- Node.js + Express
-- MySQL (DBMS / SQL coursework integration)
-- REST endpoints for users, courses, assignments, resources, and projects
+```text
+backend/
+├── config/          # Environment configuration
+├── controllers/     # Request handlers
+├── db/              # MySQL pool
+├── middleware/      # Validation + errors
+├── routes/          # Express routes
+├── services/        # SQL queries (parameterized)
+├── .env.example
+├── package.json
+└── server.js
+```
 
-## Status
+## Setup
 
-Not implemented yet. The frontend currently uses temporary mock data through `frontend/src/services/courseService.js`.
+```bash
+cd backend
+cp .env.example .env
+# Edit .env with your MySQL credentials
+npm install
+npm run dev
+```
 
-When ready, this backend will replace mock data without changing the React page structure.
+API base: `http://localhost:5001/api`

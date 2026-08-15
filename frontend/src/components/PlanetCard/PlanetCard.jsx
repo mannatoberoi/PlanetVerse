@@ -17,21 +17,7 @@ export default function PlanetCard({ course }) {
         <p className={styles.code}>{course.code}</p>
         <h3 className={styles.title}>{course.name}</h3>
         <p className={styles.desc}>{course.description}</p>
-        <div className={styles.progressBlock}>
-          <div className={styles.progressMeta}>
-            <span>Progress</span>
-            <span>{course.progress}%</span>
-          </div>
-          <div className={styles.track} aria-hidden="true">
-            <div
-              className={styles.bar}
-              style={{
-                width: `${course.progress}%`,
-                background: `linear-gradient(90deg, ${course.color}, ${course.accent})`,
-              }}
-            />
-          </div>
-        </div>
+        <p className={styles.type}>{course.planetType}</p>
         <Link className={styles.link} to={ROUTES.course(course.id)}>
           Enter orbit →
         </Link>

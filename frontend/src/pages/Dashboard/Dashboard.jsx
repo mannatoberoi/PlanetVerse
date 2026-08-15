@@ -15,8 +15,8 @@ export default function Dashboard() {
           <p className={styles.eyebrow}>Mission Control</p>
           <h1 className="section-title">Your Learning Dashboard</h1>
           <p className={styles.lead}>
-            Course planets in your constellation — progress, assignments, and
-            pathways at a glance.
+            Course planets loaded live from MySQL — create more in the Galaxy,
+            then return here to browse them.
           </p>
         </div>
         <Link to={ROUTES.galaxy}>

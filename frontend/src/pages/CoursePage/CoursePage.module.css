@@ -7,3 +7,69 @@
 .toolbar {
   margin-bottom: 1.25rem;
 }
+
+.manage {
+  margin-top: 1.25rem;
+  padding: 1.15rem 1.2rem;
+}
+
+.manage h2 {
+  margin: 0 0 0.85rem;
+  font-size: 1rem;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+}
+
+.form label {
+  display: grid;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+  color: var(--pv-text-muted);
+}
+
+.full {
+  grid-column: 1 / -1;
+}
+
+.form input,
+.form textarea,
+.form select {
+  width: 100%;
+  padding: 0.65rem 0.8rem;
+  border-radius: var(--pv-radius-sm);
+  border: 1px solid var(--pv-border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--pv-text);
+}
+
+.form input[type="color"] {
+  height: 42px;
+  padding: 0.2rem;
+}
+
+.actions {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.error {
+  color: #ff8fa8;
+  margin: 1rem 0 0;
+}
+
+.success {
+  color: var(--pv-teal);
+  margin: 1rem 0 0;
+}
+
+@media (max-width: 700px) {
+  .form {
+    grid-template-columns: 1fr;
+  }
+}

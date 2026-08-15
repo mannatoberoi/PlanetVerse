@@ -21,3 +21,138 @@
   margin: 0.35rem auto 0;
   max-width: 52ch;
 }
+
+.toolbar {
+  margin: 0 auto 1rem;
+  width: min(560px, 100%);
+  position: relative;
+}
+
+.search input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--pv-border);
+  background: rgba(10, 16, 32, 0.65);
+  color: var(--pv-text);
+  outline: none;
+}
+
+.search input:focus {
+  border-color: var(--pv-border-glow);
+  box-shadow: 0 0 0 3px rgba(90, 210, 255, 0.12);
+}
+
+.results {
+  margin-top: 0.55rem;
+  padding: 0.35rem;
+  list-style: none;
+}
+
+.results li {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.results button:first-child {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  border: none;
+  background: transparent;
+  color: var(--pv-text);
+  text-align: left;
+  padding: 0.55rem 0.65rem;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.results button:first-child:hover {
+  background: rgba(90, 210, 255, 0.08);
+}
+
+.results em {
+  font-style: normal;
+  color: var(--pv-text-muted);
+  font-size: 0.8rem;
+}
+
+.swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.createPanel {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+}
+
+.createPanel h2 {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+}
+
+.createLead {
+  margin: 0 0 1rem;
+  font-size: 0.88rem;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+}
+
+.form label {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+  color: var(--pv-text-muted);
+}
+
+.full {
+  grid-column: 1 / -1;
+}
+
+.form input,
+.form textarea {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  border-radius: var(--pv-radius-sm);
+  border: 1px solid var(--pv-border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--pv-text);
+  outline: none;
+}
+
+.form input[type="color"] {
+  padding: 0.25rem;
+  height: 42px;
+}
+
+.formActions {
+  grid-column: 1 / -1;
+}
+
+.error {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: #ff8fa8;
+  font-size: 0.88rem;
+}
+
+.success {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--pv-teal);
+  font-size: 0.88rem;
+}
+
+@media (max-width: 700px) {
+  .form {
+    grid-template-columns: 1fr;
+  }
+}

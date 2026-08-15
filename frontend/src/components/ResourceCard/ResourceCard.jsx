@@ -5,6 +5,9 @@ export default function ResourceCard({ resource }) {
     <article className={`glass-panel ${styles.card}`}>
       <p className={styles.type}>{resource.type}</p>
       <h3 className={styles.title}>{resource.title}</h3>
+      {resource.description && (
+        <p className={styles.desc}>{resource.description}</p>
+      )}
       <a className={styles.link} href={resource.url}>
         Open resource
       </a>

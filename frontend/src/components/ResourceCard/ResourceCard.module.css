@@ -11,8 +11,14 @@
 }
 
 .title {
-  margin: 0 0 0.7rem;
+  margin: 0 0 0.45rem;
   font-size: 0.92rem;
+}
+
+.desc {
+  margin: 0 0 0.7rem;
+  font-size: 0.82rem;
+  color: var(--pv-text-muted);
 }
 
 .link {
