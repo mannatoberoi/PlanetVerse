@@ -66,6 +66,8 @@ function CoreGlow() {
 
 /**
  * Soft 3D galaxy disc behind interactive course planets.
+ * Canvas must stay transparent — Three.js Color backgrounds are opaque
+ * (alpha in hex is ignored) and was painting a washed-out rectangle.
  */
 export default function GalaxyScene() {
   return (
@@ -73,10 +75,13 @@ export default function GalaxyScene() {
       <Canvas
         camera={{ position: [0, 3.2, 7.5], fov: 42 }}
         dpr={[1, 1.5]}
-        gl={{ antialias: true, alpha: true }}
+        gl={{ antialias: true, alpha: true, premultipliedAlpha: true }}
+        onCreated={({ gl }) => {
+          gl.setClearColor(0x000000, 0);
+        }}
+        style={{ background: "transparent" }}
       >
-        <color attach="background" args={["#00000000"]} />
-        <ambientLight intensity={0.4} />
+        <ambientLight intensity={0.45} />
         <GalaxyDust />
         <CoreGlow />
       </Canvas>

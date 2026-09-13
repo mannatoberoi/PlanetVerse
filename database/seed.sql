@@ -23,10 +23,10 @@ SET FOREIGN_KEY_CHECKS = 1;
 -- password column stores a labeled demo placeholder (no real secrets)
 -- ------------------------------------------------------------
 INSERT INTO users (name, email, password, role) VALUES
-('Nova Explorer', 'nova@planetverse.edu', 'DEMO_ONLY_hash_student1', 'student'),
-('Aria Orbit', 'aria@planetverse.edu', 'DEMO_ONLY_hash_student2', 'student'),
-('Kai Nebula', 'kai@planetverse.edu', 'DEMO_ONLY_hash_student3', 'student'),
-('Admin Stella', 'admin@planetverse.edu', 'DEMO_ONLY_hash_admin', 'admin');
+('Nova Explorer', 'nova@planetverse.edu', 'explorer123', 'student'),
+('Aria Orbit', 'aria@planetverse.edu', 'explorer123', 'student'),
+('Kai Nebula', 'kai@planetverse.edu', 'explorer123', 'student'),
+('Admin Stella', 'admin@planetverse.edu', 'admin123', 'admin');
 
 -- ------------------------------------------------------------
 -- Courses (planets)
