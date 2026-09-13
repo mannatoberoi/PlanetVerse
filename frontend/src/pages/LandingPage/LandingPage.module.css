@@ -9,7 +9,7 @@
 .hero {
   position: relative;
   z-index: 2;
-  width: min(720px, 100%);
+  width: min(900px, 100%);
   text-align: center;
 }
 
@@ -23,8 +23,8 @@
 
 .brand {
   margin: 0;
-  font-size: clamp(2.6rem, 9vw, 5.2rem);
-  letter-spacing: 0.14em;
+  font-size: clamp(2.6rem, 8vw, 4.8rem);
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   background: linear-gradient(180deg, #ffffff 10%, #9fd8ff 70%, #5ad2ff 100%);
   -webkit-background-clip: text;
