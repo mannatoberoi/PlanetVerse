@@ -1,4 +1,5 @@
-
+import Toast from "../../components/Toast/Toast";
+import useDebouncedValue from "../../hooks/useDebouncedValue";
 import { useMemo, useState, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../../components/Button/Button";
@@ -18,11 +19,16 @@ const emptyCourseForm = {
 };
 
 export default function GalaxyPage() {
+  
   const navigate = useNavigate();
   const { courses, loading, error, refresh } = useCourses();
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [planetTypeFilter, setPlanetTypeFilter] = useState("all");
+const debouncedSearchQuery = useDebouncedValue(searchQuery, 300);
+
+  const [toast, setToast] = useState(null);
+
+const [planetTypeFilter, setPlanetTypeFilter] = useState("all");
   const [sortBy, setSortBy] = useState("name-asc");
   const [highlightedId, setHighlightedId] = useState(null);
 
@@ -33,7 +39,7 @@ export default function GalaxyPage() {
 
   // Search, filter and sort the existing course data.
   const filteredCourses = useMemo(() => {
-    const query = searchQuery.trim().toLowerCase();
+   const query = debouncedSearchQuery.trim().toLowerCase();
 
     const result = courses.filter((course) => {
       const name = String(course.name ?? "").toLowerCase();
@@ -67,7 +73,7 @@ export default function GalaxyPage() {
 
       return String(a.name ?? "").localeCompare(String(b.name ?? ""));
     });
-  }, [courses, searchQuery, planetTypeFilter, sortBy]);
+  }, [courses, debouncedSearchQuery, planetTypeFilter, sortBy]);
 const planetTypes = useMemo(() => {
   return [
     ...new Set(
@@ -154,18 +160,27 @@ const planetTypes = useMemo(() => {
       setSortBy("name-asc");
       setHighlightedId(null);
 
-      setStatusMessage(
-        "Course planet created successfully and the galaxy has been refreshed."
-      );
-    } catch (err) {
-      setFormError(err.message || "Could not create course.");
-    } finally {
+      setStatusMessage("");
+
+setToast({
+  type: "success",
+  message: "Course planet created successfully!",
+});
+   } catch (err) {
+  setFormError("");
+
+  setToast({
+    type: "error",
+    message: err.message || "Could not create course.",
+  });
+} finally {
       setSaving(false);
     }
   };
 
   return (
     <section className={styles.page}>
+      <Toast toast={toast} setToast={setToast} />
       <header className={styles.header}>
         <p className={styles.eyebrow}>Exploration Mode</p>
         <h1 className="section-title">Course Galaxy</h1>
@@ -365,11 +380,7 @@ const planetTypes = useMemo(() => {
             </p>
           )}
 
-          {statusMessage && (
-            <p className={styles.success} role="status">
-              {statusMessage}
-            </p>
-          )}
+        
 
           <div className={styles.formActions}>
             <Button type="submit" disabled={saving}>
