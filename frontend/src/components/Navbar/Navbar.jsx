@@ -1,5 +1,8 @@
-import { NavLink } from "react-router-dom";
+
+import { NavLink, useNavigate } from "react-router-dom";
 import { APP_NAME, ROUTES } from "../../utils/constants";
+import { clearSessionUser } from "../../utils/session";
+import { useUser } from "../../context/UserContext";
 import styles from "./Navbar.module.css";
 
 const links = [
@@ -9,6 +12,16 @@ const links = [
 ];
 
 export default function Navbar() {
+  const navigate = useNavigate();
+  const { user } = useUser();
+
+  const loggedIn = Boolean(user?.user_id);
+
+  function handleLogout() {
+    clearSessionUser();
+    navigate(ROUTES.login, { replace: true });
+  }
+
   return (
     <header className={styles.navbar}>
       <nav className={styles.inner} aria-label="Main navigation">
@@ -23,17 +36,30 @@ export default function Navbar() {
               <NavLink
                 to={link.to}
                 className={({ isActive }) =>
-                  isActive ? `${styles.link} ${styles.active}` : styles.link
+                  isActive
+                    ? `${styles.link} ${styles.active}`
+                    : styles.link
                 }
               >
                 {link.label}
               </NavLink>
             </li>
           ))}
+
           <li>
-            <NavLink to={ROUTES.login} className={styles.login}>
-              Login
-            </NavLink>
+            {loggedIn ? (
+              <button
+                type="button"
+                className={styles.login}
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+            ) : (
+              <NavLink to={ROUTES.login} className={styles.login}>
+                Login
+              </NavLink>
+            )}
           </li>
         </ul>
       </nav>

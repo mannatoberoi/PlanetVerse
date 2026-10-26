@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import styles from "./Planet.module.css";
 
@@ -9,6 +10,9 @@ export default function Planet({
   matchState = "neutral",
 }) {
   const [hovered, setHovered] = useState(false);
+
+  const courseName = course.name ?? "Untitled course";
+  const courseCode = String(course.code ?? course.course_code ?? "NO-CODE");
 
   const matchClass =
     matchState === "match"
@@ -43,20 +47,21 @@ export default function Planet({
         onFocus={() => setHovered(true)}
         onBlur={() => setHovered(false)}
         onClick={(event) => onSelect?.(course, event.currentTarget)}
-        aria-label={`Open course ${course.name}`}
+        aria-label={`Open course ${courseName}, code ${courseCode}`}
       >
         <span className={styles.visual}>
           <span className={styles.surface} aria-hidden="true" />
           <span className={styles.ring} aria-hidden="true" />
           <span className={styles.glow} aria-hidden="true" />
         </span>
-        <span className={styles.label}>{course.code}</span>
+
+       <span className={styles.label}>{course.code}</span>
       </button>
 
       {hovered && (
         <div className={`glass-panel ${styles.tooltip}`} role="tooltip">
-          <p className={styles.tooltipTitle}>{course.name}</p>
-          <p className={styles.tooltipMeta}>{course.code}</p>
+          <p className={styles.tooltipTitle}>{courseName}</p>
+          <p className={styles.tooltipMeta}>{courseCode}</p>
           <p className={styles.tooltipDesc}>{course.description}</p>
           <p className={styles.tooltipHint}>Click to travel</p>
         </div>

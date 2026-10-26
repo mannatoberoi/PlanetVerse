@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getSessionUser } from "./session";
+import { getSessionUser } from "../utils/session.js";
 
 /** Re-renders when login / logout updates the local session. */
 export function useSessionUser() {

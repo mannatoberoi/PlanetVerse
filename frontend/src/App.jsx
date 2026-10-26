@@ -1,8 +1,12 @@
+
 import { useCallback, useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+
 import LoadingScreen from "./components/LoadingScreen/LoadingScreen";
+import ProtectedRoute from "./components/ProtectedRoute";
 import MainLayout from "./layouts/MainLayout/MainLayout";
 import AuthLayout from "./layouts/AuthLayout/AuthLayout";
+
 import LandingPage from "./pages/LandingPage/LandingPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import Dashboard from "./pages/Dashboard/Dashboard";
@@ -10,31 +14,46 @@ import GalaxyPage from "./pages/GalaxyPage/GalaxyPage";
 import CoursePage from "./pages/CoursePage/CoursePage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 
+import { UserProvider } from "./context/UserContext";
+
 export default function App() {
   const [booting, setBooting] = useState(true);
-  const handleBootComplete = useCallback(() => setBooting(false), []);
+
+  const handleBootComplete = useCallback(() => {
+    setBooting(false);
+  }, []);
 
   return (
-    <>
-      {booting && <LoadingScreen onComplete={handleBootComplete} />}
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
+    <UserProvider>
+      <>
+        {booting && (
+          <LoadingScreen onComplete={handleBootComplete} />
+        )}
 
-          <Route element={<AuthLayout />}>
-            <Route path="/login" element={<LoginPage />} />
-          </Route>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
 
-          <Route element={<MainLayout />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/galaxy" element={<GalaxyPage />} />
-            <Route path="/course/:id" element={<CoursePage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-          </Route>
+            <Route element={<AuthLayout />}>
+              <Route path="/login" element={<LoginPage />} />
+            </Route>
 
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </BrowserRouter>
-    </>
+            <Route element={<ProtectedRoute />}>
+              <Route element={<MainLayout />}>
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/galaxy" element={<GalaxyPage />} />
+                <Route path="/course/:id" element={<CoursePage />} />
+                <Route path="/profile" element={<ProfilePage />} />
+              </Route>
+            </Route>
+
+            <Route
+              path="*"
+              element={<Navigate to="/" replace />}
+            />
+          </Routes>
+        </BrowserRouter>
+      </>
+    </UserProvider>
   );
 }

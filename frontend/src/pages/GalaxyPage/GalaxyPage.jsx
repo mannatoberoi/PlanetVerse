@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { lazy, Suspense } from "react";
+
+import { useMemo, useState, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../../components/Button/Button";
 import { useCourses } from "../../hooks/useCourses";
@@ -20,32 +20,77 @@ const emptyCourseForm = {
 export default function GalaxyPage() {
   const navigate = useNavigate();
   const { courses, loading, error, refresh } = useCourses();
+
   const [searchQuery, setSearchQuery] = useState("");
+  const [planetTypeFilter, setPlanetTypeFilter] = useState("all");
+  const [sortBy, setSortBy] = useState("name-asc");
   const [highlightedId, setHighlightedId] = useState(null);
+
   const [form, setForm] = useState(emptyCourseForm);
   const [formError, setFormError] = useState("");
   const [saving, setSaving] = useState(false);
   const [statusMessage, setStatusMessage] = useState("");
 
-  const matches = useMemo(() => {
-    const q = searchQuery.trim().toLowerCase();
-    if (!q) return [];
-    return courses.filter(
-      (course) =>
-        course.name.toLowerCase().includes(q) ||
-        course.code.toLowerCase().includes(q)
-    );
-  }, [courses, searchQuery]);
+  // Search, filter and sort the existing course data.
+  const filteredCourses = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+
+    const result = courses.filter((course) => {
+      const name = String(course.name ?? "").toLowerCase();
+      const code = String(course.code ?? "").toLowerCase();
+      const type = String(
+  course.planetType ?? course.planet_type ?? ""
+).toLowerCase();
+
+      const matchesSearch =
+        !query || name.includes(query) || code.includes(query);
+
+      const matchesType =
+        planetTypeFilter === "all" ||
+        type === planetTypeFilter.toLowerCase();
+
+      return matchesSearch && matchesType;
+    });
+
+    return result.sort((a, b) => {
+      if (sortBy === "name-desc") {
+        return String(b.name ?? "").localeCompare(String(a.name ?? ""));
+      }
+
+      if (sortBy === "code-asc") {
+        return String(a.code ?? "").localeCompare(String(b.code ?? ""));
+      }
+
+      if (sortBy === "code-desc") {
+        return String(b.code ?? "").localeCompare(String(a.code ?? ""));
+      }
+
+      return String(a.name ?? "").localeCompare(String(b.name ?? ""));
+    });
+  }, [courses, searchQuery, planetTypeFilter, sortBy]);
+const planetTypes = useMemo(() => {
+  return [
+    ...new Set(
+      courses
+        .map((course) => course.planetType ?? course.planet_type)
+        .filter(Boolean)
+        .map((type) => String(type).toLowerCase())
+    ),
+  ].sort();
+}, [courses]);
+
+  // Keep the selected planet in sync with the current search/filter.
+  const matches = filteredCourses;
 
   const handleSearchChange = (event) => {
-    const value = event.target.value;
-    setSearchQuery(value);
+    setSearchQuery(event.target.value);
     setHighlightedId(null);
+    setStatusMessage("");
   };
 
   const handleSelectResult = (course) => {
     setHighlightedId(course.id);
-    setSearchQuery(course.name);
+    setSearchQuery(course.name ?? "");
   };
 
   const handleOpenResult = (course) => {
@@ -54,7 +99,14 @@ export default function GalaxyPage() {
 
   const handleFormChange = (event) => {
     const { name, value } = event.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+
+    setForm((previous) => ({
+      ...previous,
+      [name]: value,
+    }));
+
+    setFormError("");
+    setStatusMessage("");
   };
 
   const handleCreateCourse = async (event) => {
@@ -62,25 +114,51 @@ export default function GalaxyPage() {
     setFormError("");
     setStatusMessage("");
 
-    if (
-      !form.course_name.trim() ||
-      !form.course_code.trim() ||
-      !form.description.trim() ||
-      !form.planet_type.trim() ||
-      !form.planet_color.trim()
-    ) {
-      setFormError("Please fill in every field before creating a planet.");
+    const courseName = form.course_name.trim();
+    const courseCode = form.course_code.trim();
+    const description = form.description.trim();
+
+    if (!courseName || !courseCode || !description) {
+      setFormError(
+        "Please enter a course name, course code and description."
+      );
       return;
     }
 
+    if (!/^[a-zA-Z0-9-]+$/.test(courseCode)) {
+      setFormError(
+        "Course code can contain only letters, numbers and hyphens."
+      );
+      return;
+    }
+
+    if (saving) return;
+
     setSaving(true);
+
     try {
-      await createCourse(form);
+
+      await createCourse({
+        ...form,
+        course_name: courseName,
+        course_code: courseCode,
+        description,
+        planet_type: form.planet_type.trim(),
+      });
+
       await refresh();
+
       setForm(emptyCourseForm);
-      setStatusMessage("New course planet created in MySQL and added to the galaxy.");
+      setSearchQuery("");
+      setPlanetTypeFilter("all");
+      setSortBy("name-asc");
+      setHighlightedId(null);
+
+      setStatusMessage(
+        "Course planet created successfully and the galaxy has been refreshed."
+      );
     } catch (err) {
-      setFormError(err.message || "Could not create course");
+      setFormError(err.message || "Could not create course.");
     } finally {
       setSaving(false);
     }
@@ -92,8 +170,8 @@ export default function GalaxyPage() {
         <p className={styles.eyebrow}>Exploration Mode</p>
         <h1 className="section-title">Course Galaxy</h1>
         <p className={styles.lead}>
-          Planets are loaded from MySQL through the Express API. Hover for intel,
-          search to highlight, click to travel.
+          Explore course planets loaded from MySQL. Search, filter,
+          sort and select a planet to learn more.
         </p>
       </header>
 
@@ -108,56 +186,113 @@ export default function GalaxyPage() {
           />
         </label>
 
-        {matches.length > 0 && (
-          <ul className={`glass-panel ${styles.results}`} role="listbox">
-            {matches.map((course) => (
-              <li key={course.id}>
-                <button
-                  type="button"
-                  onClick={() => handleSelectResult(course)}
-                  onDoubleClick={() => handleOpenResult(course)}
-                >
-                  <span
-                    className={styles.swatch}
-                    style={{ background: course.color }}
-                    aria-hidden="true"
-                  />
-                  {course.name} <em>{course.code}</em>
-                </button>
-                <Button
-                  variant="ghost"
-                  type="button"
-                  onClick={() => handleOpenResult(course)}
-                >
-                  Open
-                </Button>
-              </li>
+        <label>
+          <span className="sr-only">Filter by planet type</span>
+          <select
+            value={planetTypeFilter}
+            onChange={(event) => {
+              setPlanetTypeFilter(event.target.value);
+              setHighlightedId(null);
+            }}
+          >
+            <option value="all">All planet types</option>
+            {planetTypes.map((type) => (
+              <option key={type} value={type}>
+                {type.charAt(0).toUpperCase() + type.slice(1)}
+              </option>
             ))}
-          </ul>
-        )}
+          </select>
+        </label>
+
+        <label>
+          <span className="sr-only">Sort courses</span>
+          <select
+            value={sortBy}
+            onChange={(event) => setSortBy(event.target.value)}
+          >
+            <option value="name-asc">Name: A–Z</option>
+            <option value="name-desc">Name: Z–A</option>
+            <option value="code-asc">Code: A–Z</option>
+            <option value="code-desc">Code: Z–A</option>
+          </select>
+        </label>
       </div>
 
-      {loading && <p className="muted">Aligning stellar map…</p>}
+      {!loading && !error && (
+        <p className="muted" aria-live="polite">
+          Showing {filteredCourses.length} of {courses.length} course planets.
+        </p>
+      )}
+
+      {matches.length > 0 && (
+        <ul className={`glass-panel ${styles.results}`} role="list">
+          {matches.map((course) => (
+            <li key={course.id}>
+              <button
+                type="button"
+                onClick={() => handleSelectResult(course)}
+                aria-pressed={highlightedId === course.id}
+              >
+                <span
+                  className={styles.swatch}
+                  style={{ background: course.color || "#5ad2ff" }}
+                  aria-hidden="true"
+                />
+                {course.name} <em>{course.code}</em>
+              </button>
+
+              <Button
+                variant="ghost"
+                type="button"
+                onClick={() => handleOpenResult(course)}
+              >
+                Open
+              </Button>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {!loading &&
+        !error &&
+        searchQuery.trim() !== "" &&
+        filteredCourses.length === 0 && (
+          <p className="muted" role="status">
+            No planets match your search and selected filter. Try another query.
+          </p>
+        )}
+
+      {loading && (
+        <p className="muted" role="status">
+          Aligning stellar map…
+        </p>
+      )}
+
       {error && (
-        <p className={styles.error}>
+        <p className={styles.error} role="alert">
           Could not load planets from the API. Is the backend running? ({error})
         </p>
       )}
 
       {!loading && !error && (
-        <Suspense fallback={<p className="muted">Rendering galaxy field…</p>}>
+        <Suspense
+          fallback={<p className="muted">Rendering galaxy field…</p>}
+        >
           <Galaxy
-            courses={courses}
+            courses={filteredCourses}
             searchQuery={searchQuery}
             highlightedId={highlightedId}
           />
         </Suspense>
       )}
 
-      <section className={`glass-panel ${styles.createPanel}`} aria-labelledby="create-course-heading">
+      <section
+        className={`glass-panel ${styles.createPanel}`}
+        aria-labelledby="create-course-heading"
+      >
         <h2 id="create-course-heading">Create Course Planet</h2>
         <p className={styles.createLead}>
-          React form → POST /api/courses → SQL INSERT → MySQL → new planet appears.
+          React form → Express API → MySQL → refreshed galaxy.
         </p>
 
         <form className={styles.form} onSubmit={handleCreateCourse}>
@@ -168,8 +303,11 @@ export default function GalaxyPage() {
               value={form.course_name}
               onChange={handleFormChange}
               placeholder="e.g. Python"
+              required
+              maxLength={100}
             />
           </label>
+
           <label>
             <span>Course code</span>
             <input
@@ -177,8 +315,11 @@ export default function GalaxyPage() {
               value={form.course_code}
               onChange={handleFormChange}
               placeholder="e.g. PY-101"
+              required
+              maxLength={30}
             />
           </label>
+
           <label className={styles.full}>
             <span>Description</span>
             <textarea
@@ -187,17 +328,26 @@ export default function GalaxyPage() {
               onChange={handleFormChange}
               rows={3}
               placeholder="What will explorers learn?"
+              required
+              maxLength={1000}
             />
           </label>
+
           <label>
             <span>Planet type</span>
-            <input
+            <select
               name="planet_type"
               value={form.planet_type}
               onChange={handleFormChange}
-              placeholder="terrestrial"
-            />
+              required
+            >
+              <option value="terrestrial">Terrestrial</option>
+              <option value="gas-giant">Gas giant</option>
+              <option value="ice-giant">Ice giant</option>
+              <option value="dwarf">Dwarf planet</option>
+            </select>
           </label>
+
           <label>
             <span>Planet color</span>
             <input
@@ -205,11 +355,21 @@ export default function GalaxyPage() {
               name="planet_color"
               value={form.planet_color}
               onChange={handleFormChange}
+              required
             />
           </label>
 
-          {formError && <p className={styles.error}>{formError}</p>}
-          {statusMessage && <p className={styles.success}>{statusMessage}</p>}
+          {formError && (
+            <p className={styles.error} role="alert">
+              {formError}
+            </p>
+          )}
+
+          {statusMessage && (
+            <p className={styles.success} role="status">
+              {statusMessage}
+            </p>
+          )}
 
           <div className={styles.formActions}>
             <Button type="submit" disabled={saving}>
