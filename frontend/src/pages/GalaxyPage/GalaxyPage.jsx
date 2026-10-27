@@ -1,6 +1,12 @@
 import Toast from "../../components/Toast/Toast";
 import useDebouncedValue from "../../hooks/useDebouncedValue";
-import { useMemo, useState, lazy, Suspense } from "react";
+import {
+  useMemo,
+  useState,
+  useEffect,
+  lazy,
+  Suspense,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../../components/Button/Button";
 import { useCourses } from "../../hooks/useCourses";
@@ -9,6 +15,7 @@ import { ROUTES } from "../../utils/constants";
 import styles from "./GalaxyPage.module.css";
 
 const Galaxy = lazy(() => import("../../components/Galaxy/Galaxy"));
+const PAGE_SIZE = 8;
 
 const emptyCourseForm = {
   course_name: "",
@@ -19,34 +26,38 @@ const emptyCourseForm = {
 };
 
 export default function GalaxyPage() {
-  
   const navigate = useNavigate();
   const { courses, loading, error, refresh } = useCourses();
 
   const [searchQuery, setSearchQuery] = useState("");
-const debouncedSearchQuery = useDebouncedValue(searchQuery, 300);
+  const debouncedSearchQuery = useDebouncedValue(searchQuery, 300);
 
   const [toast, setToast] = useState(null);
-
-const [planetTypeFilter, setPlanetTypeFilter] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [planetTypeFilter, setPlanetTypeFilter] = useState("all");
   const [sortBy, setSortBy] = useState("name-asc");
   const [highlightedId, setHighlightedId] = useState(null);
 
   const [form, setForm] = useState(emptyCourseForm);
   const [formError, setFormError] = useState("");
   const [saving, setSaving] = useState(false);
-  const [statusMessage, setStatusMessage] = useState("");
 
-  // Search, filter and sort the existing course data.
+  // Reset pagination when search, filter, or sorting changes.
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, planetTypeFilter, sortBy]);
+
+  // Search, filter and sort courses.
   const filteredCourses = useMemo(() => {
-   const query = debouncedSearchQuery.trim().toLowerCase();
+    const query = debouncedSearchQuery.trim().toLowerCase();
 
     const result = courses.filter((course) => {
       const name = String(course.name ?? "").toLowerCase();
       const code = String(course.code ?? "").toLowerCase();
+
       const type = String(
-  course.planetType ?? course.planet_type ?? ""
-).toLowerCase();
+        course.planetType ?? course.planet_type ?? ""
+      ).toLowerCase();
 
       const matchesSearch =
         !query || name.includes(query) || code.includes(query);
@@ -60,38 +71,54 @@ const [planetTypeFilter, setPlanetTypeFilter] = useState("all");
 
     return result.sort((a, b) => {
       if (sortBy === "name-desc") {
-        return String(b.name ?? "").localeCompare(String(a.name ?? ""));
+        return String(b.name ?? "").localeCompare(
+          String(a.name ?? "")
+        );
       }
 
       if (sortBy === "code-asc") {
-        return String(a.code ?? "").localeCompare(String(b.code ?? ""));
+        return String(a.code ?? "").localeCompare(
+          String(b.code ?? "")
+        );
       }
 
       if (sortBy === "code-desc") {
-        return String(b.code ?? "").localeCompare(String(a.code ?? ""));
+        return String(b.code ?? "").localeCompare(
+          String(a.code ?? "")
+        );
       }
 
-      return String(a.name ?? "").localeCompare(String(b.name ?? ""));
+      return String(a.name ?? "").localeCompare(
+        String(b.name ?? "")
+      );
     });
   }, [courses, debouncedSearchQuery, planetTypeFilter, sortBy]);
-const planetTypes = useMemo(() => {
-  return [
-    ...new Set(
-      courses
-        .map((course) => course.planetType ?? course.planet_type)
-        .filter(Boolean)
-        .map((type) => String(type).toLowerCase())
-    ),
-  ].sort();
-}, [courses]);
 
-  // Keep the selected planet in sync with the current search/filter.
-  const matches = filteredCourses;
+  // Get available planet types for the filter.
+  const planetTypes = useMemo(() => {
+    return [
+      ...new Set(
+        courses
+          .map((course) => course.planetType ?? course.planet_type)
+          .filter(Boolean)
+          .map((type) => String(type).toLowerCase())
+      ),
+    ].sort();
+  }, [courses]);
+
+  // Pagination calculations.
+  const totalPages = Math.ceil(filteredCourses.length / PAGE_SIZE);
+
+  const paginatedCourses = filteredCourses.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE
+  );
+
+  const matches = paginatedCourses;
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
     setHighlightedId(null);
-    setStatusMessage("");
   };
 
   const handleSelectResult = (course) => {
@@ -112,13 +139,11 @@ const planetTypes = useMemo(() => {
     }));
 
     setFormError("");
-    setStatusMessage("");
   };
 
   const handleCreateCourse = async (event) => {
     event.preventDefault();
     setFormError("");
-    setStatusMessage("");
 
     const courseName = form.course_name.trim();
     const courseCode = form.course_code.trim();
@@ -143,7 +168,6 @@ const planetTypes = useMemo(() => {
     setSaving(true);
 
     try {
-
       await createCourse({
         ...form,
         course_name: courseName,
@@ -159,21 +183,18 @@ const planetTypes = useMemo(() => {
       setPlanetTypeFilter("all");
       setSortBy("name-asc");
       setHighlightedId(null);
+      setCurrentPage(1);
 
-      setStatusMessage("");
-
-setToast({
-  type: "success",
-  message: "Course planet created successfully!",
-});
-   } catch (err) {
-  setFormError("");
-
-  setToast({
-    type: "error",
-    message: err.message || "Could not create course.",
-  });
-} finally {
+      setToast({
+        type: "success",
+        message: "Course planet created successfully!",
+      });
+    } catch (err) {
+      setToast({
+        type: "error",
+        message: err.message || "Could not create course.",
+      });
+    } finally {
       setSaving(false);
     }
   };
@@ -181,9 +202,12 @@ setToast({
   return (
     <section className={styles.page}>
       <Toast toast={toast} setToast={setToast} />
+
       <header className={styles.header}>
         <p className={styles.eyebrow}>Exploration Mode</p>
+
         <h1 className="section-title">Course Galaxy</h1>
+
         <p className={styles.lead}>
           Explore course planets loaded from MySQL. Search, filter,
           sort and select a planet to learn more.
@@ -193,6 +217,7 @@ setToast({
       <div className={styles.toolbar}>
         <label className={styles.search}>
           <span className="sr-only">Search courses</span>
+
           <input
             type="search"
             placeholder="Search planets (Java, DBMS, React…)"
@@ -203,6 +228,7 @@ setToast({
 
         <label>
           <span className="sr-only">Filter by planet type</span>
+
           <select
             value={planetTypeFilter}
             onChange={(event) => {
@@ -211,6 +237,7 @@ setToast({
             }}
           >
             <option value="all">All planet types</option>
+
             {planetTypes.map((type) => (
               <option key={type} value={type}>
                 {type.charAt(0).toUpperCase() + type.slice(1)}
@@ -221,6 +248,7 @@ setToast({
 
         <label>
           <span className="sr-only">Sort courses</span>
+
           <select
             value={sortBy}
             onChange={(event) => setSortBy(event.target.value)}
@@ -235,7 +263,16 @@ setToast({
 
       {!loading && !error && (
         <p className="muted" aria-live="polite">
-          Showing {filteredCourses.length} of {courses.length} course planets.
+          Showing{" "}
+          {filteredCourses.length === 0
+            ? 0
+            : (currentPage - 1) * PAGE_SIZE + 1}
+          –
+          {Math.min(
+            currentPage * PAGE_SIZE,
+            filteredCourses.length
+          )}{" "}
+          of {filteredCourses.length} matching course planets.
         </p>
       )}
 
@@ -250,9 +287,12 @@ setToast({
               >
                 <span
                   className={styles.swatch}
-                  style={{ background: course.color || "#5ad2ff" }}
+                  style={{
+                    background: course.color || "#5ad2ff",
+                  }}
                   aria-hidden="true"
                 />
+
                 {course.name} <em>{course.code}</em>
               </button>
 
@@ -268,12 +308,49 @@ setToast({
         </ul>
       )}
 
+      {/* Pagination controls */}
+      {filteredCourses.length > PAGE_SIZE && (
+        <nav
+          className={styles.pagination}
+          aria-label="Course pages"
+        >
+          <button
+            type="button"
+            className={styles.pageButton}
+            onClick={() =>
+              setCurrentPage((page) => Math.max(1, page - 1))
+            }
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
+
+          <span className={styles.pageInfo} aria-live="polite">
+            Page {currentPage} of {totalPages}
+          </span>
+
+          <button
+            type="button"
+            className={styles.pageButton}
+            onClick={() =>
+              setCurrentPage((page) =>
+                Math.min(totalPages, page + 1)
+              )
+            }
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
+        </nav>
+      )}
+
       {!loading &&
         !error &&
         searchQuery.trim() !== "" &&
         filteredCourses.length === 0 && (
           <p className="muted" role="status">
-            No planets match your search and selected filter. Try another query.
+            No planets match your search and selected filter. Try
+            another query.
           </p>
         )}
 
@@ -285,16 +362,19 @@ setToast({
 
       {error && (
         <p className={styles.error} role="alert">
-          Could not load planets from the API. Is the backend running? ({error})
+          Could not load planets from the API. Is the backend running?
+          ({error})
         </p>
       )}
 
       {!loading && !error && (
         <Suspense
-          fallback={<p className="muted">Rendering galaxy field…</p>}
+          fallback={
+            <p className="muted">Rendering galaxy field…</p>
+          }
         >
           <Galaxy
-            courses={filteredCourses}
+            courses={paginatedCourses}
             searchQuery={searchQuery}
             highlightedId={highlightedId}
           />
@@ -306,6 +386,7 @@ setToast({
         aria-labelledby="create-course-heading"
       >
         <h2 id="create-course-heading">Create Course Planet</h2>
+
         <p className={styles.createLead}>
           React form → Express API → MySQL → refreshed galaxy.
         </p>
@@ -313,6 +394,7 @@ setToast({
         <form className={styles.form} onSubmit={handleCreateCourse}>
           <label>
             <span>Course name</span>
+
             <input
               name="course_name"
               value={form.course_name}
@@ -325,6 +407,7 @@ setToast({
 
           <label>
             <span>Course code</span>
+
             <input
               name="course_code"
               value={form.course_code}
@@ -337,6 +420,7 @@ setToast({
 
           <label className={styles.full}>
             <span>Description</span>
+
             <textarea
               name="description"
               value={form.description}
@@ -350,6 +434,7 @@ setToast({
 
           <label>
             <span>Planet type</span>
+
             <select
               name="planet_type"
               value={form.planet_type}
@@ -365,6 +450,7 @@ setToast({
 
           <label>
             <span>Planet color</span>
+
             <input
               type="color"
               name="planet_color"
@@ -379,8 +465,6 @@ setToast({
               {formError}
             </p>
           )}
-
-        
 
           <div className={styles.formActions}>
             <Button type="submit" disabled={saving}>

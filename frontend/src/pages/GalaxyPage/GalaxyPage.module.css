@@ -26,6 +26,8 @@
   margin: 0 auto 1rem;
   width: min(560px, 100%);
   position: relative;
+  display: grid;
+  gap: 0.65rem;
 }
 
 .search input {
@@ -41,6 +43,15 @@
 .search input:focus {
   border-color: var(--pv-border-glow);
   box-shadow: 0 0 0 3px rgba(90, 210, 255, 0.12);
+}
+
+.toolbar select {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  border-radius: 0.65rem;
+  border: 1px solid var(--pv-border);
+  background: rgba(10, 16, 32, 0.85);
+  color: var(--pv-text);
 }
 
 .results {
@@ -83,6 +94,41 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin: 1.25rem 0 1.5rem;
+}
+
+.pageButton {
+  padding: 0.65rem 1.1rem;
+  border: 1px solid var(--pv-border-glow);
+  border-radius: 0.65rem;
+  color: var(--pv-text);
+  background: rgba(20, 35, 65, 0.8);
+  cursor: pointer;
+  transition: opacity 0.2s ease, background 0.2s ease;
+}
+
+.pageButton:hover:not(:disabled) {
+  background: rgba(90, 210, 255, 0.2);
+}
+
+.pageButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pageInfo {
+  color: var(--pv-text-muted);
+  font-size: 0.9rem;
 }
 
 .createPanel {
@@ -118,7 +164,8 @@
 }
 
 .form input,
-.form textarea {
+.form textarea,
+.form select {
   width: 100%;
   padding: 0.7rem 0.85rem;
   border-radius: var(--pv-radius-sm);
@@ -126,6 +173,12 @@
   background: rgba(255, 255, 255, 0.04);
   color: var(--pv-text);
   outline: none;
+}
+
+.form input:focus,
+.form textarea:focus,
+.form select:focus {
+  border-color: var(--pv-border-glow);
 }
 
 .form input[type="color"] {
@@ -151,8 +204,25 @@
   font-size: 0.88rem;
 }
 
+@media (min-width: 600px) {
+  .toolbar {
+    grid-template-columns: 2fr 1fr 1fr;
+    width: 100%;
+    max-width: 850px;
+    align-items: center;
+  }
+}
+
 @media (max-width: 700px) {
   .form {
     grid-template-columns: 1fr;
+  }
+
+  .pagination {
+    gap: 0.65rem;
+  }
+
+  .pageButton {
+    padding: 0.6rem 0.85rem;
   }
 }
