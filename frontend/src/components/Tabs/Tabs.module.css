@@ -1,0 +1,42 @@
+.tabs {
+  width: 100%;
+  margin: 1.5rem 0;
+}
+
+.tabList {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--pv-border);
+  padding-bottom: 0.65rem;
+}
+
+.tab {
+  padding: 0.75rem 1.2rem;
+  border: 1px solid transparent;
+  border-radius: 0.7rem;
+  background: transparent;
+  color: var(--pv-text-muted);
+  font: inherit;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.tab:hover {
+  color: var(--pv-text);
+  background: rgba(90, 210, 255, 0.08);
+}
+
+.active {
+  color: var(--pv-text);
+  background: rgba(90, 210, 255, 0.12);
+  border-color: var(--pv-border-glow);
+  box-shadow: 0 0 14px rgba(90, 210, 255, 0.08);
+}
+
+.tab:focus-visible {
+  outline: 2px solid var(--pv-cyan);
+  outline-offset: 3px;
+}
